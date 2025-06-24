@@ -591,77 +591,144 @@ You can test the function directly at: https://your-site.netlify.app/.netlify/fu
 
         function updateDavisConditions(sensors) {
             try {
-                console.log('Available sensors:', sensors.map(s => ({ type: s.sensor_type, lsid: s.lsid })));
+                console.log('All available sensors:', sensors.map(s => ({ 
+                    type: s.sensor_type, 
+                    lsid: s.lsid, 
+                    dataCount: s.data ? s.data.length : 0,
+                    dataStructureType: s.data_structure_type
+                })));
                 
-                // Find the ISS sensor (sensor_type 45 for Vantage Pro2)
-                const issSensor = sensors.find(sensor => sensor.sensor_type === 45);
+                // Look for sensors with actual data
+                const sensorsWithData = sensors.filter(sensor => sensor.data && sensor.data.length > 0);
+                console.log('Sensors with data:', sensorsWithData.map(s => s.sensor_type));
                 
-                if (!issSensor || !issSensor.data || issSensor.data.length === 0) {
-                    // Try other common sensor types
-                    const altSensor = sensors.find(sensor => 
-                        sensor.sensor_type === 24 || // Another common type
-                        sensor.data && sensor.data.length > 0
-                    );
-                    
-                    if (altSensor) {
-                        console.log('Using alternative sensor type:', altSensor.sensor_type);
-                        processDavisSensorData(altSensor.data[0]);
-                        return;
-                    }
-                    
-                    throw new Error(`No compatible sensor found. Available types: ${sensors.map(s => s.sensor_type).join(', ')}`);
+                if (sensorsWithData.length === 0) {
+                    throw new Error('No sensors have data available');
                 }
                 
-                const data = issSensor.data[0];
-                console.log('Processing Davis sensor data:', data);
+                // Try to find the best sensor for weather data
+                // Common Davis sensor types: 45 (ISS), 24 (Vantage Pro2), 23 (Vantage Vue)
+                let bestSensor = sensorsWithData.find(sensor => sensor.sensor_type === 45) || // ISS
+                                sensorsWithData.find(sensor => sensor.sensor_type === 24) || // Vantage Pro2
+                                sensorsWithData.find(sensor => sensor.sensor_type === 23) || // Vantage Vue
+                                sensorsWithData[0]; // Use the first sensor with data
+                
+                console.log('Selected sensor:', { 
+                    type: bestSensor.sensor_type, 
+                    lsid: bestSensor.lsid,
+                    dataStructureType: bestSensor.data_structure_type
+                });
+                
+                const data = bestSensor.data[0];
+                console.log('Available data fields:', Object.keys(data));
+                
                 processDavisSensorData(data);
                 
             } catch (error) {
                 console.error('Error updating Davis conditions:', error);
-                showError('davisError', `Error processing Davis data: ${error.message}`);
+                showError('davisError', `Error processing Davis data: ${error.message}
+
+Available sensors: ${sensors.map(s => `Type ${s.sensor_type} (${s.data ? s.data.length : 0} records)`).join(', ')}
+
+Check browser console (F12) for detailed sensor information.`);
             }
         }
         
         function processDavisSensorData(data) {
-            // Temperature (convert from Fahrenheit to Celsius)
-            if (data.temp_out !== undefined) {
-                const tempF = data.temp_out;
-                const tempC = (tempF - 32) * 5/9;
-                document.getElementById('davisTemperature').textContent = tempC.toFixed(2);
-            } else if (data.temp !== undefined) {
-                const tempF = data.temp;
-                const tempC = (tempF - 32) * 5/9;
-                document.getElementById('davisTemperature').textContent = tempC.toFixed(2);
+            console.log('Processing data with fields:', Object.keys(data));
+            
+            // Temperature - try multiple field names
+            const tempFields = ['temp_out', 'temp', 'temp_hi', 'temp_lo', 'air_temp_hi', 'air_temp_lo'];
+            let tempSet = false;
+            
+            for (const field of tempFields) {
+                if (data[field] !== undefined && data[field] !== null) {
+                    const tempF = data[field];
+                    const tempC = (tempF - 32) * 5/9;
+                    document.getElementById('davisTemperature').textContent = tempC.toFixed(2);
+                    console.log(`Temperature from ${field}: ${tempF}°F = ${tempC.toFixed(2)}°C`);
+                    tempSet = true;
+                    break;
+                }
+            }
+            if (!tempSet) {
+                console.log('No temperature field found in:', Object.keys(data));
+                document.getElementById('davisTemperature').textContent = '--';
             }
             
-            // Wind Speed (already in mph)
-            if (data.wind_speed_avg !== undefined) {
-                document.getElementById('davisWindSpeed').textContent = Math.round(data.wind_speed_avg);
-            } else if (data.wind_speed !== undefined) {
-                document.getElementById('davisWindSpeed').textContent = Math.round(data.wind_speed);
+            // Wind Speed - try multiple field names
+            const windSpeedFields = ['wind_speed_avg', 'wind_speed', 'wind_speed_hi', 'wind_speed_last'];
+            let windSpeedSet = false;
+            
+            for (const field of windSpeedFields) {
+                if (data[field] !== undefined && data[field] !== null) {
+                    document.getElementById('davisWindSpeed').textContent = Math.round(data[field]);
+                    console.log(`Wind speed from ${field}: ${data[field]} mph`);
+                    windSpeedSet = true;
+                    break;
+                }
+            }
+            if (!windSpeedSet) {
+                console.log('No wind speed field found in:', Object.keys(data));
+                document.getElementById('davisWindSpeed').textContent = '--';
             }
             
-            // Wind Direction
-            const windDir = data.wind_dir_of_prevail || data.wind_dir || data.wind_direction || 0;
-            document.getElementById('davisWindDirection').textContent = windDir;
-            document.getElementById('davisWindDirectionText').textContent = getWindDirectionText(windDir);
+            // Wind Direction - try multiple field names
+            const windDirFields = ['wind_dir_of_prevail', 'wind_dir', 'wind_direction', 'wind_dir_hi', 'wind_dir_at_hi_speed_last_10_min'];
+            let windDir = 0;
+            let windDirSet = false;
             
-            const arrow = document.getElementById('davisWindArrow');
-            arrow.style.transform = `translate(-50%, -100%) rotate(${windDir}deg)`;
-            
-            // Humidity
-            if (data.hum_out !== undefined) {
-                document.getElementById('davisHumidity').textContent = data.hum_out.toFixed(2);
-            } else if (data.hum !== undefined) {
-                document.getElementById('davisHumidity').textContent = data.hum.toFixed(2);
+            for (const field of windDirFields) {
+                if (data[field] !== undefined && data[field] !== null) {
+                    windDir = data[field];
+                    console.log(`Wind direction from ${field}: ${windDir}°`);
+                    windDirSet = true;
+                    break;
+                }
             }
             
-            // Rainfall (24hr - already in inches)
-            if (data.rainfall_in !== undefined) {
-                document.getElementById('davisRainfall').textContent = data.rainfall_in.toFixed(2);
-            } else if (data.rain !== undefined) {
-                document.getElementById('davisRainfall').textContent = data.rain.toFixed(2);
+            if (windDirSet) {
+                document.getElementById('davisWindDirection').textContent = windDir;
+                document.getElementById('davisWindDirectionText').textContent = getWindDirectionText(windDir);
+                const arrow = document.getElementById('davisWindArrow');
+                arrow.style.transform = `translate(-50%, -100%) rotate(${windDir}deg)`;
             } else {
+                console.log('No wind direction field found in:', Object.keys(data));
+                document.getElementById('davisWindDirection').textContent = '--';
+                document.getElementById('davisWindDirectionText').textContent = '--';
+            }
+            
+            // Humidity - try multiple field names
+            const humidityFields = ['hum_out', 'hum', 'humidity', 'relative_humidity'];
+            let humiditySet = false;
+            
+            for (const field of humidityFields) {
+                if (data[field] !== undefined && data[field] !== null) {
+                    document.getElementById('davisHumidity').textContent = data[field].toFixed(2);
+                    console.log(`Humidity from ${field}: ${data[field]}%`);
+                    humiditySet = true;
+                    break;
+                }
+            }
+            if (!humiditySet) {
+                console.log('No humidity field found in:', Object.keys(data));
+                document.getElementById('davisHumidity').textContent = '--';
+            }
+            
+            // Rainfall - try multiple field names
+            const rainfallFields = ['rainfall_in', 'rain', 'precip_accum_last_1hr', 'rain_rate_hi_in', 'rainfall_daily_in'];
+            let rainfallSet = false;
+            
+            for (const field of rainfallFields) {
+                if (data[field] !== undefined && data[field] !== null) {
+                    document.getElementById('davisRainfall').textContent = data[field].toFixed(2);
+                    console.log(`Rainfall from ${field}: ${data[field]} inches`);
+                    rainfallSet = true;
+                    break;
+                }
+            }
+            if (!rainfallSet) {
+                console.log('No rainfall field found in:', Object.keys(data));
                 document.getElementById('davisRainfall').textContent = '0.00';
             }
         }
