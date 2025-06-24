@@ -533,7 +533,7 @@ If this persists, the WeatherFlow API may have additional CORS restrictions.`);
             document.getElementById('tempestRainfall').textContent = rainfallInches.toFixed(2);
         }
 
-        // Davis Weather Station Functions
+        // Davis Weather Station Functions - UPDATED VERSION v2.1 - June 24, 2025
         async function fetchDavisData() {
             try {
                 hideError('davisError');
@@ -541,7 +541,7 @@ If this persists, the WeatherFlow API may have additional CORS restrictions.`);
                 // Use Netlify function to handle Davis API authentication
                 const functionUrl = '/.netlify/functions/davis-weather';
                 
-                console.log('Fetching Davis data from Netlify function:', functionUrl);
+                console.log('DAVIS v2.1: Fetching Davis data from Netlify function:', functionUrl);
                 
                 const response = await fetch(functionUrl, {
                     method: 'GET',
@@ -555,7 +555,7 @@ If this persists, the WeatherFlow API may have additional CORS restrictions.`);
                 }
                 
                 const result = await response.json();
-                console.log('Davis function response:', result);
+                console.log('DAVIS v2.1: Davis function response received');
                 
                 if (!result.success) {
                     throw new Error(`API Error: ${result.error}`);
@@ -573,10 +573,10 @@ If this persists, the WeatherFlow API may have additional CORS restrictions.`);
                     `Last updated: ${new Date().toLocaleString()}`;
                     
             } catch (error) {
-                console.error('Error fetching Davis data:', error);
+                console.error('DAVIS v2.1: Error fetching Davis data:', error);
                 showError('davisError', `Failed to fetch Davis data: ${error.message}
 
-Debugging info:
+DAVIS v2.1 - Debugging info:
 - Check browser console (F12) for detailed error messages
 - Check Netlify function logs for server-side errors
 - Function URL: /.netlify/functions/davis-weather
@@ -591,31 +591,32 @@ You can test the function directly at: https://your-site.netlify.app/.netlify/fu
 
         function updateDavisConditions(sensors) {
             try {
-                console.log('Davis sensors received:', sensors.length);
+                console.log('DAVIS v2.1: Processing sensors, count:', sensors.length);
                 
                 // Your station has sensor_type 37 (ISS-like) with comprehensive weather data
                 const weatherSensor = sensors.find(sensor => sensor.sensor_type === 37);
                 
                 if (!weatherSensor || !weatherSensor.data || weatherSensor.data.length === 0) {
+                    console.log('DAVIS v2.1: Available sensor types:', sensors.map(s => s.sensor_type));
                     throw new Error('No weather sensor (type 37) found with data');
                 }
                 
                 const data = weatherSensor.data[0];
-                console.log('Using Davis weather sensor data:', Object.keys(data));
+                console.log('DAVIS v2.1: Using weather sensor data with fields:', Object.keys(data).slice(0, 10));
                 
                 // Temperature (already in Fahrenheit, convert to Celsius)
                 if (data.temp !== undefined) {
                     const tempF = data.temp;
                     const tempC = (tempF - 32) * 5/9;
                     document.getElementById('davisTemperature').textContent = tempC.toFixed(2);
-                    console.log(`Temperature: ${tempF}°F = ${tempC.toFixed(2)}°C`);
+                    console.log(`DAVIS v2.1: Temperature: ${tempF}°F = ${tempC.toFixed(2)}°C`);
                 }
                 
                 // Wind Speed (convert from mph to match display)
                 if (data.wind_speed_avg_last_10_min !== undefined) {
                     const windSpeed = data.wind_speed_avg_last_10_min;
                     document.getElementById('davisWindSpeed').textContent = Math.round(windSpeed);
-                    console.log(`Wind Speed: ${windSpeed} mph`);
+                    console.log(`DAVIS v2.1: Wind Speed: ${windSpeed} mph`);
                 }
                 
                 // Wind Direction
@@ -626,35 +627,35 @@ You can test the function directly at: https://your-site.netlify.app/.netlify/fu
                     
                     const arrow = document.getElementById('davisWindArrow');
                     arrow.style.transform = `translate(-50%, -100%) rotate(${windDir}deg)`;
-                    console.log(`Wind Direction: ${windDir}°`);
+                    console.log(`DAVIS v2.1: Wind Direction: ${windDir}°`);
                 }
                 
                 // Humidity
                 if (data.hum !== undefined) {
                     document.getElementById('davisHumidity').textContent = data.hum.toFixed(2);
-                    console.log(`Humidity: ${data.hum}%`);
+                    console.log(`DAVIS v2.1: Humidity: ${data.hum}%`);
                 }
                 
                 // 24-hour Rainfall (convert from inches)
                 if (data.rainfall_last_24_hr_in !== undefined) {
                     document.getElementById('davisRainfall').textContent = data.rainfall_last_24_hr_in.toFixed(2);
-                    console.log(`24hr Rainfall: ${data.rainfall_last_24_hr_in} inches`);
+                    console.log(`DAVIS v2.1: 24hr Rainfall: ${data.rainfall_last_24_hr_in} inches`);
                 } else {
                     // Fallback to daily rainfall if 24hr not available
                     document.getElementById('davisRainfall').textContent = data.rainfall_daily_in.toFixed(2);
-                    console.log(`Daily Rainfall: ${data.rainfall_daily_in} inches`);
+                    console.log(`DAVIS v2.1: Daily Rainfall: ${data.rainfall_daily_in} inches`);
                 }
                 
-                console.log('Davis weather data updated successfully');
+                console.log('DAVIS v2.1: Weather data updated successfully');
                 
             } catch (error) {
-                console.error('Error updating Davis conditions:', error);
-                showError('davisError', `Error processing Davis data: ${error.message}
+                console.error('DAVIS v2.1: Error updating Davis conditions:', error);
+                showError('davisError', `DAVIS v2.1 - Error processing Davis data: ${error.message}
 
 Your station provides these sensor types:
 ${sensors.map(s => `- Type ${s.sensor_type} (${s.data ? s.data.length : 0} records)`).join('\n')}
 
-Check browser console (F12) for detailed information.`);
+Check browser console (F12) for DAVIS v2.1 messages.`);
             }
         }
         
@@ -833,5 +834,7 @@ Check browser console (F12) for detailed information.`);
             }, 5 * 60 * 1000);
         });
     </script>
+</body>
+</html>
 </body>
 </html>
