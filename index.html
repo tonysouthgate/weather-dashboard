@@ -591,46 +591,118 @@ You can test the function directly at: https://your-site.netlify.app/.netlify/fu
 
         function updateDavisConditions(sensors) {
             try {
-                console.log('All available sensors:', sensors.map(s => ({ 
-                    type: s.sensor_type, 
-                    lsid: s.lsid, 
-                    dataCount: s.data ? s.data.length : 0,
-                    dataStructureType: s.data_structure_type
-                })));
+                // Show detailed sensor information
+                console.log('=== DAVIS SENSOR DIAGNOSTIC ===');
+                console.log('Total sensors received:', sensors.length);
                 
-                // Look for sensors with actual data
-                const sensorsWithData = sensors.filter(sensor => sensor.data && sensor.data.length > 0);
-                console.log('Sensors with data:', sensorsWithData.map(s => s.sensor_type));
-                
-                if (sensorsWithData.length === 0) {
-                    throw new Error('No sensors have data available');
-                }
-                
-                // Try to find the best sensor for weather data
-                // Common Davis sensor types: 45 (ISS), 24 (Vantage Pro2), 23 (Vantage Vue)
-                let bestSensor = sensorsWithData.find(sensor => sensor.sensor_type === 45) || // ISS
-                                sensorsWithData.find(sensor => sensor.sensor_type === 24) || // Vantage Pro2
-                                sensorsWithData.find(sensor => sensor.sensor_type === 23) || // Vantage Vue
-                                sensorsWithData[0]; // Use the first sensor with data
-                
-                console.log('Selected sensor:', { 
-                    type: bestSensor.sensor_type, 
-                    lsid: bestSensor.lsid,
-                    dataStructureType: bestSensor.data_structure_type
+                sensors.forEach((sensor, index) => {
+                    console.log(`Sensor ${index + 1}:`, {
+                        sensor_type: sensor.sensor_type,
+                        lsid: sensor.lsid,
+                        data_structure_type: sensor.data_structure_type,
+                        has_data: sensor.data ? true : false,
+                        data_count: sensor.data ? sensor.data.length : 0,
+                        sample_data: sensor.data && sensor.data.length > 0 ? Object.keys(sensor.data[0]) : []
+                    });
                 });
                 
-                const data = bestSensor.data[0];
-                console.log('Available data fields:', Object.keys(data));
+                // Find ANY sensor with data
+                const sensorsWithData = sensors.filter(sensor => sensor.data && sensor.data.length > 0);
                 
-                processDavisSensorData(data);
+                if (sensorsWithData.length === 0) {
+                    throw new Error(`No sensors have data. Found ${sensors.length} sensors total: ${sensors.map(s => `Type ${s.sensor_type}`).join(', ')}`);
+                }
+                
+                // Use the first sensor with data
+                const workingSensor = sensorsWithData[0];
+                console.log('Using sensor:', workingSensor.sensor_type, 'with data fields:', Object.keys(workingSensor.data[0]));
+                
+                // Try to extract weather data from whatever sensor we have
+                const data = workingSensor.data[0];
+                
+                // Show ALL available fields
+                console.log('All data fields available:', Object.keys(data));
+                console.log('Sample data values:', data);
+                
+                // Try to find temperature data
+                let tempSet = false;
+                for (const [key, value] of Object.entries(data)) {
+                    if (key.toLowerCase().includes('temp') && typeof value === 'number' && value > -50 && value < 150) {
+                        const tempF = value;
+                        const tempC = (tempF - 32) * 5/9;
+                        document.getElementById('davisTemperature').textContent = tempC.toFixed(2);
+                        console.log(`Found temperature in field '${key}': ${tempF}°F = ${tempC.toFixed(2)}°C`);
+                        tempSet = true;
+                        break;
+                    }
+                }
+                
+                // Try to find humidity data
+                let humSet = false;
+                for (const [key, value] of Object.entries(data)) {
+                    if (key.toLowerCase().includes('hum') && typeof value === 'number' && value >= 0 && value <= 100) {
+                        document.getElementById('davisHumidity').textContent = value.toFixed(2);
+                        console.log(`Found humidity in field '${key}': ${value}%`);
+                        humSet = true;
+                        break;
+                    }
+                }
+                
+                // Try to find wind speed data
+                let windSpeedSet = false;
+                for (const [key, value] of Object.entries(data)) {
+                    if (key.toLowerCase().includes('wind') && key.toLowerCase().includes('speed') && typeof value === 'number' && value >= 0) {
+                        document.getElementById('davisWindSpeed').textContent = Math.round(value);
+                        console.log(`Found wind speed in field '${key}': ${value} mph`);
+                        windSpeedSet = true;
+                        break;
+                    }
+                }
+                
+                // Try to find wind direction data
+                let windDirSet = false;
+                for (const [key, value] of Object.entries(data)) {
+                    if (key.toLowerCase().includes('wind') && key.toLowerCase().includes('dir') && typeof value === 'number' && value >= 0 && value <= 360) {
+                        document.getElementById('davisWindDirection').textContent = value;
+                        document.getElementById('davisWindDirectionText').textContent = getWindDirectionText(value);
+                        const arrow = document.getElementById('davisWindArrow');
+                        arrow.style.transform = `translate(-50%, -100%) rotate(${value}deg)`;
+                        console.log(`Found wind direction in field '${key}': ${value}°`);
+                        windDirSet = true;
+                        break;
+                    }
+                }
+                
+                // Set defaults for missing data
+                if (!tempSet) {
+                    document.getElementById('davisTemperature').textContent = '--';
+                    console.log('No temperature field found');
+                }
+                if (!humSet) {
+                    document.getElementById('davisHumidity').textContent = '--';
+                    console.log('No humidity field found');
+                }
+                if (!windSpeedSet) {
+                    document.getElementById('davisWindSpeed').textContent = '--';
+                    console.log('No wind speed field found');
+                }
+                if (!windDirSet) {
+                    document.getElementById('davisWindDirection').textContent = '--';
+                    document.getElementById('davisWindDirectionText').textContent = '--';
+                    console.log('No wind direction field found');
+                }
+                
+                // For rainfall, just set to 0 for now
+                document.getElementById('davisRainfall').textContent = '0.00';
+                
+                console.log('=== END DIAGNOSTIC ===');
                 
             } catch (error) {
                 console.error('Error updating Davis conditions:', error);
                 showError('davisError', `Error processing Davis data: ${error.message}
 
-Available sensors: ${sensors.map(s => `Type ${s.sensor_type} (${s.data ? s.data.length : 0} records)`).join(', ')}
-
-Check browser console (F12) for detailed sensor information.`);
+Please check the browser console (F12) for detailed sensor information.
+Or visit: https://claudeweather.netlify.app/.netlify/functions/davis-weather to see raw API data.`);
             }
         }
         
@@ -809,5 +881,7 @@ Check browser console (F12) for detailed sensor information.`);
             }, 5 * 60 * 1000);
         });
     </script>
+</body>
+</html>
 </body>
 </html>
