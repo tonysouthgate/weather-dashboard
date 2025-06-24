@@ -551,12 +551,17 @@ If this persists, the WeatherFlow API may have additional CORS restrictions.`);
                 });
                 
                 if (!response.ok) {
-                    const errorData = await response.json().catch(() => ({}));
-                    throw new Error(`Function Error: ${response.status} - ${errorData.error || response.statusText}`);
+                    throw new Error(`Function Error: ${response.status} - ${response.statusText}`);
                 }
                 
-                const data = await response.json();
-                console.log('Davis API response:', data);
+                const result = await response.json();
+                console.log('Davis function response:', result);
+                
+                if (!result.success) {
+                    throw new Error(`API Error: ${result.error}`);
+                }
+                
+                const data = result.data;
                 
                 if (!data.sensors || data.sensors.length === 0) {
                     throw new Error('No sensor data available for Davis station');
@@ -573,10 +578,11 @@ If this persists, the WeatherFlow API may have additional CORS restrictions.`);
 
 Debugging info:
 - Check browser console (F12) for detailed error messages
+- Check Netlify function logs for server-side errors
 - Function URL: /.netlify/functions/davis-weather
 - Station ID: ${davisConfig.stationId}
 
-If the function is not deployed, you'll see a 404 error.`);
+You can test the function directly at: https://your-site.netlify.app/.netlify/functions/davis-weather`);
                 
                 // Show demo data as fallback
                 showDavisMockData();
@@ -585,52 +591,93 @@ If the function is not deployed, you'll see a 404 error.`);
 
         function updateDavisConditions(sensors) {
             try {
+                console.log('Available sensors:', sensors.map(s => ({ type: s.sensor_type, lsid: s.lsid })));
+                
                 // Find the ISS sensor (sensor_type 45 for Vantage Pro2)
                 const issSensor = sensors.find(sensor => sensor.sensor_type === 45);
                 
                 if (!issSensor || !issSensor.data || issSensor.data.length === 0) {
-                    throw new Error('No ISS sensor data found');
+                    // Try other common sensor types
+                    const altSensor = sensors.find(sensor => 
+                        sensor.sensor_type === 24 || // Another common type
+                        sensor.data && sensor.data.length > 0
+                    );
+                    
+                    if (altSensor) {
+                        console.log('Using alternative sensor type:', altSensor.sensor_type);
+                        processDavisSensorData(altSensor.data[0]);
+                        return;
+                    }
+                    
+                    throw new Error(`No compatible sensor found. Available types: ${sensors.map(s => s.sensor_type).join(', ')}`);
                 }
                 
                 const data = issSensor.data[0];
                 console.log('Processing Davis sensor data:', data);
-                
-                // Temperature (convert from Fahrenheit to Celsius)
-                if (data.temp_out !== undefined) {
-                    const tempF = data.temp_out;
-                    const tempC = (tempF - 32) * 5/9;
-                    document.getElementById('davisTemperature').textContent = tempC.toFixed(2);
-                }
-                
-                // Wind Speed (already in mph)
-                if (data.wind_speed_avg !== undefined) {
-                    document.getElementById('davisWindSpeed').textContent = Math.round(data.wind_speed_avg);
-                }
-                
-                // Wind Direction
-                if (data.wind_dir_of_prevail !== undefined) {
-                    const windDir = data.wind_dir_of_prevail;
-                    document.getElementById('davisWindDirection').textContent = windDir;
-                    document.getElementById('davisWindDirectionText').textContent = getWindDirectionText(windDir);
-                    
-                    const arrow = document.getElementById('davisWindArrow');
-                    arrow.style.transform = `translate(-50%, -100%) rotate(${windDir}deg)`;
-                }
-                
-                // Humidity
-                if (data.hum_out !== undefined) {
-                    document.getElementById('davisHumidity').textContent = data.hum_out.toFixed(2);
-                }
-                
-                // Rainfall (24hr - already in inches)
-                if (data.rainfall_in !== undefined) {
-                    document.getElementById('davisRainfall').textContent = data.rainfall_in.toFixed(2);
-                }
+                processDavisSensorData(data);
                 
             } catch (error) {
                 console.error('Error updating Davis conditions:', error);
                 showError('davisError', `Error processing Davis data: ${error.message}`);
             }
+        }
+        
+        function processDavisSensorData(data) {
+            // Temperature (convert from Fahrenheit to Celsius)
+            if (data.temp_out !== undefined) {
+                const tempF = data.temp_out;
+                const tempC = (tempF - 32) * 5/9;
+                document.getElementById('davisTemperature').textContent = tempC.toFixed(2);
+            } else if (data.temp !== undefined) {
+                const tempF = data.temp;
+                const tempC = (tempF - 32) * 5/9;
+                document.getElementById('davisTemperature').textContent = tempC.toFixed(2);
+            }
+            
+            // Wind Speed (already in mph)
+            if (data.wind_speed_avg !== undefined) {
+                document.getElementById('davisWindSpeed').textContent = Math.round(data.wind_speed_avg);
+            } else if (data.wind_speed !== undefined) {
+                document.getElementById('davisWindSpeed').textContent = Math.round(data.wind_speed);
+            }
+            
+            // Wind Direction
+            const windDir = data.wind_dir_of_prevail || data.wind_dir || data.wind_direction || 0;
+            document.getElementById('davisWindDirection').textContent = windDir;
+            document.getElementById('davisWindDirectionText').textContent = getWindDirectionText(windDir);
+            
+            const arrow = document.getElementById('davisWindArrow');
+            arrow.style.transform = `translate(-50%, -100%) rotate(${windDir}deg)`;
+            
+            // Humidity
+            if (data.hum_out !== undefined) {
+                document.getElementById('davisHumidity').textContent = data.hum_out.toFixed(2);
+            } else if (data.hum !== undefined) {
+                document.getElementById('davisHumidity').textContent = data.hum.toFixed(2);
+            }
+            
+            // Rainfall (24hr - already in inches)
+            if (data.rainfall_in !== undefined) {
+                document.getElementById('davisRainfall').textContent = data.rainfall_in.toFixed(2);
+            } else if (data.rain !== undefined) {
+                document.getElementById('davisRainfall').textContent = data.rain.toFixed(2);
+            } else {
+                document.getElementById('davisRainfall').textContent = '0.00';
+            }
+        }
+
+        function showDavisMockData() {
+            // Mock data to demonstrate the layout
+            document.getElementById('davisTemperature').textContent = '18.75';
+            document.getElementById('davisWindSpeed').textContent = '12';
+            document.getElementById('davisWindDirection').textContent = '225';
+            document.getElementById('davisWindDirectionText').textContent = 'SW';
+            document.getElementById('davisHumidity').textContent = '62.30';
+            document.getElementById('davisRainfall').textContent = '0.05';
+            
+            // Update compass arrow
+            const arrow = document.getElementById('davisWindArrow');
+            arrow.style.transform = `translate(-50%, -100%) rotate(225deg)`;
         }
 
         function updateDavisConditions(sensors) {
