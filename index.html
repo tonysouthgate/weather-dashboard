@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Station Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .station-section {
+            margin-bottom: 50px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .logo img {
+            height: 80px;
+            width: auto;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+            transition: transform 0.3s ease;
+        }
+
+        .logo img:hover {
+            transform: scale(1.05);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 10px;
+        }
+
+        .last-updated {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .weather-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .weather-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .weather-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .card-value {
+            font-size: 2.5rem;
+            font-weight: 300;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .card-unit {
+            font-size: 1rem;
+            color: #666;
+        }
+
+        .wind-direction {
+            margin-top: 15px;
+        }
+
+        .compass {
+            width: 80px;
+            height: 80px;
+            border: 2px solid #ddd;
+            border-radius: 50%;
+            position: relative;
+            margin: 15px auto;
+            background: #f8f9fa;
+        }
+
+        .compass-arrow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 2px;
+            height: 30px;
+            background: #e74c3c;
+            transform-origin: bottom center;
+            transform: translate(-50%, -100%);
+            transition: transform 0.5s ease;
+        }
+
+        .compass-arrow::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -3px;
+            width: 0;
+            height: 0;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-bottom: 8px solid #e74c3c;
+        }
+
+        .compass-labels {
+            position: absolute;
+            top: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: #666;
+        }
+
+        .error {
+            color: #e74c3c;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            padding: 15px;
+            background: rgba(231, 76, 60, 0.1);
+            border-radius: 8px;
+            border-left: 4px solid #e74c3c;
+            white-space: pre-line;
+            line-height: 1.5;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .loading {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .logo img {
+                height: 60px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .weather-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .card-value {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Tempest Weather Station Section -->
+        <div class="station-section">
+            <div class="header">
+                <div class="logo">
+                    <img src="https://tempestwx.com/images/full-logo.svg" alt="Tempest Weather" />
+                </div>
+                <h1>🌤️ Weather Station</h1>
+                <div class="last-updated" id="tempestLastUpdated">Loading Tempest data...</div>
+            </div>
+
+            <div class="weather-grid" id="tempestWeatherGrid">
+                <div class="weather-card">
+                    <div class="card-header">
+                        <div class="card-icon">🌡️</div>
+                        <div class="card-title">Temperature</div>
+                    </div>
+                    <div class="card-value" id="tempestTemperature">--</div>
+                    <div class="card-unit">°C</div>
+                </div>
+
+                <div class="weather-card">
+                    <div class="card-header">
+                        <div class="card-icon">💨</div>
+                        <div class="card-title">Wind Speed</div>
+                    </div>
+                    <div class="card-value" id="tempestWindSpeed">--</div>
+                    <div class="card-unit">mph</div>
+                </div>
+
+                <div class="weather-card">
+                    <div class="card-header">
+                        <div class="card-icon">🧭</div>
+                        <div class="card-title">Wind Direction</div>
+                    </div>
+                    <div class="compass">
+                        <div class="compass-labels">N</div>
+                        <div class="compass-arrow" id="tempestWindArrow"></div>
+                    </div>
+                    <div style="text-align: center; margin-top: 10px;">
+                        <span id="tempestWindDirection">--</span>° (<span id="tempestWindDirectionText">--</span>)
+                    </div>
+                </div>
+
+                <div class="weather-card">
+                    <div class="card-header">
+                        <div class="card-icon">💧</div>
+                        <div class="card-title">Humidity</div>
+                    </div>
+                    <div class="card-value" id="tempestHumidity">--</div>
+                    <div class="card-unit">%</div>
+                </div>
+
+                <div class="weather-card">
+                    <div class="card-header">
+                        <div class="card-icon">🌧️</div>
+                        <div class="card-title">24hr Rainfall</div>
+                    </div>
+                    <div class="card-value" id="tempestRainfall">--</div>
+                    <div class="card-unit">inches</div>
+                </div>
+            </div>
+            
+            <div id="tempestError" class="error hidden"></div>
+        </div>
+
+        <!-- Davis Weather Station Section -->
+        <div class="station-section">
+            <div class="header">
+                <div class="logo">
+                    <img src="https://cdn.shopify.com/s/files/1/0515/5992/3873/files/1-2_Davis_Logo_Web_Dark_Blue.svg?v=1614402314" alt="Davis Instruments" />
+                </div>
+                <h1>🌤️ Vantage Pro2</h1>
+                <div class="last-updated" id="davisLastUpdated">Loading Davis data...</div>
+            </div>
+
+            <div class="weather-grid" id="davisWeatherGrid">
+                <div class="weather-card">
+                    <div class="card-header">
+                        <div class="card-icon">🌡️</div>
+                        <div class="card-title">Temperature</div>
+                    </div>
+                    <div class="card-value" id="davisTemperature">--</div>
+                    <div class="card-unit">°C</div>
+                </div>
+
+                <div class="weather-card">
+                    <div class="card-header">
+                        <div class="card-icon">💨</div>
+                        <div class="card-title">Wind Speed</div>
+                    </div>
+                    <div class="card-value" id="davisWindSpeed">--</div>
+                    <div class="card-unit">mph</div>
+                </div>
+
+                <div class="weather-card">
+                    <div class="card-header">
+                        <div class="card-icon">🧭</div>
+                        <div class="card-title">Wind Direction</div>
+                    </div>
+                    <div class="compass">
+                        <div class="compass-labels">N</div>
+                        <div class="compass-arrow" id="davisWindArrow"></div>
+                    </div>
+                    <div style="text-align: center; margin-top: 10px;">
+                        <span id="davisWindDirection">--</span>° (<span id="davisWindDirectionText">--</span>)
+                    </div>
+                </div>
+
+                <div class="weather-card">
+                    <div class="card-header">
+                        <div class="card-icon">💧</div>
+                        <div class="card-title">Humidity</div>
+                    </div>
+                    <div class="card-value" id="davisHumidity">--</div>
+                    <div class="card-unit">%</div>
+                </div>
+
+                <div class="weather-card">
+                    <div class="card-header">
+                        <div class="card-icon">🌧️</div>
+                        <div class="card-title">24hr Rainfall</div>
+                    </div>
+                    <div class="card-value" id="davisRainfall">--</div>
+                    <div class="card-unit">inches</div>
+                </div>
+            </div>
+            
+            <div id="davisError" class="error hidden"></div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const tempestConfig = {
+            apiToken: '02ec898b-0bad-4bc6-8517-dfc35cf3d845',
+            stationId: '140578'
+        };
+
+        const davisConfig = {
+            apiKey: 'bvgu5bfmm99lvfrqhlffy3l8pmpbq26v',
+            apiSecret: 'lhcttqhmgxipv3zy8xgupadhbgowwcs1',
+            stationId: '92193'
+        };
+
+        // Utility functions
+        function showError(elementId, message) {
+            const errorDiv = document.getElementById(elementId);
+            errorDiv.textContent = message;
+            errorDiv.classList.remove('hidden');
+        }
+
+        function hideError(elementId) {
+            document.getElementById(elementId).classList.add('hidden');
+        }
+
+        function getWindDirectionText(degrees) {
+            const directions = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 
+                              'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
+            const index = Math.round(degrees / 22.5) % 16;
+            return directions[index];
+        }
+
+        // Tempest Weather Station Functions
+        async function fetchTempestData() {
+            try {
+                hideError('tempestError');
+                
+                // Try multiple approaches for CORS bypass
+                const apiUrl = `https://swd.weatherflow.com/swd/rest/observations/station/${tempestConfig.stationId}?token=${tempestConfig.apiToken}`;
+                
+                console.log('Attempting to fetch Tempest data from:', apiUrl);
+                
+                // Try direct call first (might work on some hosting platforms)
+                try {
+                    const directResponse = await fetch(apiUrl, {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json',
+                        }
+                    });
+                    
+                    if (directResponse.ok) {
+                        const currentData = await directResponse.json();
+                        console.log('Direct API call successful:', currentData);
+                        
+                        if (currentData.status && currentData.status.status_code !== 0) {
+                            throw new Error(`Tempest API Error: ${currentData.status.status_message}`);
+                        }
+                        
+                        if (!currentData.obs || currentData.obs.length === 0) {
+                            throw new Error('No observation data available for Tempest station');
+                        }
+
+                        const latestObs = currentData.obs[0];
+                        updateTempestConditions(latestObs);
+                        
+                        await fetchTempest24HourRainfall();
+                        
+                        document.getElementById('tempestLastUpdated').textContent = 
+                            `Last updated: ${new Date().toLocaleString()}`;
+                        return;
+                    }
+                } catch (directError) {
+                    console.log('Direct API call failed, trying CORS proxy:', directError.message);
+                }
+                
+                // Try CORS proxy approach
+                const corsProxyUrl = `https://corsproxy.io/?${encodeURIComponent(apiUrl)}`;
+                console.log('Trying CORS proxy:', corsProxyUrl);
+                
+                const response = await fetch(corsProxyUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`CORS Proxy Error: ${response.status} - ${response.statusText}`);
+                }
+                
+                const currentData = await response.json();
+                console.log('CORS proxy successful:', currentData);
+                
+                if (currentData.status && currentData.status.status_code !== 0) {
+                    throw new Error(`Tempest API Error: ${currentData.status.status_message}`);
+                }
+                
+                if (!currentData.obs || currentData.obs.length === 0) {
+                    throw new Error('No observation data available for Tempest station');
+                }
+
+                const latestObs = currentData.obs[0];
+                updateTempestConditions(latestObs);
+                
+                await fetchTempest24HourRainfall();
+                
+                document.getElementById('tempestLastUpdated').textContent = 
+                    `Last updated: ${new Date().toLocaleString()}`;
+                    
+            } catch (error) {
+                console.error('Error fetching Tempest data:', error);
+                showError('tempestError', `Failed to fetch Tempest data: ${error.message}
+
+Debugging info:
+- Check browser console (F12) for detailed error messages
+- API URL: https://swd.weatherflow.com/swd/rest/observations/station/${tempestConfig.stationId}
+- Station ID: ${tempestConfig.stationId}
+- API Token: ${tempestConfig.apiToken.substring(0, 8)}...
+
+If this persists, the WeatherFlow API may have additional CORS restrictions.`);
+            }
+        }
+
+        function updateTempestConditions(obs) {
+            try {
+                // Temperature (data comes in Celsius, display as Celsius with 2 decimal places)
+                const tempC = obs.air_temperature;
+                document.getElementById('tempestTemperature').textContent = tempC.toFixed(2);
+                
+                // Wind Speed (convert from m/s to mph)
+                const windMph = obs.wind_avg * 2.237;
+                document.getElementById('tempestWindSpeed').textContent = Math.round(windMph);
+                
+                // Wind Direction
+                const windDir = obs.wind_direction || 0;
+                document.getElementById('tempestWindDirection').textContent = windDir;
+                document.getElementById('tempestWindDirectionText').textContent = getWindDirectionText(windDir);
+                
+                // Update compass arrow
+                const arrow = document.getElementById('tempestWindArrow');
+                arrow.style.transform = `translate(-50%, -100%) rotate(${windDir}deg)`;
+                
+                // Humidity (show to 2 decimal places)
+                document.getElementById('tempestHumidity').textContent = obs.relative_humidity.toFixed(2);
+                
+            } catch (error) {
+                console.error('Error updating Tempest conditions:', error);
+            }
+        }
+
+        async function fetchTempest24HourRainfall() {
+            try {
+                const endTime = Math.floor(Date.now() / 1000);
+                const startTime = endTime - (24 * 60 * 60);
+                
+                const apiUrl = `https://swd.weatherflow.com/swd/rest/observations/station/${tempestConfig.stationId}?time_start=${startTime}&time_end=${endTime}&token=${tempestConfig.apiToken}`;
+                
+                // Try direct call first
+                try {
+                    const directResponse = await fetch(apiUrl);
+                    if (directResponse.ok) {
+                        const data = await directResponse.json();
+                        processRainfallData(data);
+                        return;
+                    }
+                } catch (directError) {
+                    console.log('Direct rainfall API call failed, trying CORS proxy');
+                }
+                
+                // Try CORS proxy
+                const corsProxyUrl = `https://corsproxy.io/?${encodeURIComponent(apiUrl)}`;
+                const response = await fetch(corsProxyUrl);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    processRainfallData(data);
+                } else {
+                    document.getElementById('tempestRainfall').textContent = '--';
+                }
+            } catch (error) {
+                console.error('Error fetching Tempest rainfall data:', error);
+                document.getElementById('tempestRainfall').textContent = '--';
+            }
+        }
+        
+        function processRainfallData(data) {
+            let totalRain = 0;
+            if (data.obs && data.obs.length > 0) {
+                totalRain = data.obs.reduce((sum, obs) => {
+                    return sum + (obs.precip_accum_last_1hr || 0);
+                }, 0);
+            }
+            
+            const rainfallInches = totalRain * 0.0393701;
+            document.getElementById('tempestRainfall').textContent = rainfallInches.toFixed(2);
+        }
+
+        // Davis Weather Station Functions
+        async function fetchDavisData() {
+            try {
+                hideError('davisError');
+                
+                // Use Netlify function to handle Davis API authentication
+                const functionUrl = '/.netlify/functions/davis-weather';
+                
+                console.log('Fetching Davis data from Netlify function:', functionUrl);
+                
+                const response = await fetch(functionUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                    }
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(`Function Error: ${response.status} - ${errorData.error || response.statusText}`);
+                }
+                
+                const data = await response.json();
+                console.log('Davis API response:', data);
+                
+                if (!data.sensors || data.sensors.length === 0) {
+                    throw new Error('No sensor data available for Davis station');
+                }
+
+                updateDavisConditions(data.sensors);
+                
+                document.getElementById('davisLastUpdated').textContent = 
+                    `Last updated: ${new Date().toLocaleString()}`;
+                    
+            } catch (error) {
+                console.error('Error fetching Davis data:', error);
+                showError('davisError', `Failed to fetch Davis data: ${error.message}
+
+Debugging info:
+- Check browser console (F12) for detailed error messages
+- Function URL: /.netlify/functions/davis-weather
+- Station ID: ${davisConfig.stationId}
+
+If the function is not deployed, you'll see a 404 error.`);
+                
+                // Show demo data as fallback
+                showDavisMockData();
+            }
+        }
+
+        function updateDavisConditions(sensors) {
+            try {
+                // Find the ISS sensor (sensor_type 45 for Vantage Pro2)
+                const issSensor = sensors.find(sensor => sensor.sensor_type === 45);
+                
+                if (!issSensor || !issSensor.data || issSensor.data.length === 0) {
+                    throw new Error('No ISS sensor data found');
+                }
+                
+                const data = issSensor.data[0];
+                console.log('Processing Davis sensor data:', data);
+                
+                // Temperature (convert from Fahrenheit to Celsius)
+                if (data.temp_out !== undefined) {
+                    const tempF = data.temp_out;
+                    const tempC = (tempF - 32) * 5/9;
+                    document.getElementById('davisTemperature').textContent = tempC.toFixed(2);
+                }
+                
+                // Wind Speed (already in mph)
+                if (data.wind_speed_avg !== undefined) {
+                    document.getElementById('davisWindSpeed').textContent = Math.round(data.wind_speed_avg);
+                }
+                
+                // Wind Direction
+                if (data.wind_dir_of_prevail !== undefined) {
+                    const windDir = data.wind_dir_of_prevail;
+                    document.getElementById('davisWindDirection').textContent = windDir;
+                    document.getElementById('davisWindDirectionText').textContent = getWindDirectionText(windDir);
+                    
+                    const arrow = document.getElementById('davisWindArrow');
+                    arrow.style.transform = `translate(-50%, -100%) rotate(${windDir}deg)`;
+                }
+                
+                // Humidity
+                if (data.hum_out !== undefined) {
+                    document.getElementById('davisHumidity').textContent = data.hum_out.toFixed(2);
+                }
+                
+                // Rainfall (24hr - already in inches)
+                if (data.rainfall_in !== undefined) {
+                    document.getElementById('davisRainfall').textContent = data.rainfall_in.toFixed(2);
+                }
+                
+            } catch (error) {
+                console.error('Error updating Davis conditions:', error);
+                showError('davisError', `Error processing Davis data: ${error.message}`);
+            }
+        }
+
+        function updateDavisConditions(sensors) {
+            try {
+                // Find the ISS sensor (sensor_type 45 for Vantage Pro2)
+                const issSensor = sensors.find(sensor => sensor.sensor_type === 45);
+                
+                if (!issSensor || !issSensor.data || issSensor.data.length === 0) {
+                    throw new Error('No ISS sensor data found');
+                }
+                
+                const data = issSensor.data[0];
+                
+                // Temperature (convert from Fahrenheit to Celsius)
+                if (data.temp_out !== undefined) {
+                    const tempF = data.temp_out;
+                    const tempC = (tempF - 32) * 5/9;
+                    document.getElementById('davisTemperature').textContent = tempC.toFixed(2);
+                }
+                
+                // Wind Speed (already in mph)
+                if (data.wind_speed_avg !== undefined) {
+                    document.getElementById('davisWindSpeed').textContent = Math.round(data.wind_speed_avg);
+                }
+                
+                // Wind Direction
+                if (data.wind_dir_of_prevail !== undefined) {
+                    const windDir = data.wind_dir_of_prevail;
+                    document.getElementById('davisWindDirection').textContent = windDir;
+                    document.getElementById('davisWindDirectionText').textContent = getWindDirectionText(windDir);
+                    
+                    const arrow = document.getElementById('davisWindArrow');
+                    arrow.style.transform = `translate(-50%, -100%) rotate(${windDir}deg)`;
+                }
+                
+                // Humidity
+                if (data.hum_out !== undefined) {
+                    document.getElementById('davisHumidity').textContent = data.hum_out.toFixed(2);
+                }
+                
+                // Rainfall (24hr - already in inches)
+                if (data.rainfall_in !== undefined) {
+                    document.getElementById('davisRainfall').textContent = data.rainfall_in.toFixed(2);
+                }
+                
+            } catch (error) {
+                console.error('Error updating Davis conditions:', error);
+                showError('davisError', `Error processing Davis data: ${error.message}`);
+            }
+        }
+
+        // Initialize both weather stations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Start fetching data from both stations
+            fetchTempestData();
+            fetchDavisData();
+            
+            // Auto-refresh every 5 minutes
+            setInterval(() => {
+                fetchTempestData();
+                fetchDavisData();
+            }, 5 * 60 * 1000);
+        });
+    </script>
+</body>
+</html>
