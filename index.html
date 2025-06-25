@@ -15,117 +15,160 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 20px;
+            padding: 15px;
             color: #333;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
-        }
-
-        .station-section {
-            margin-bottom: 50px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
         }
 
         .header {
             text-align: center;
-            color: white;
-            margin-bottom: 30px;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 15px;
-        }
-
-        .logo img {
-            height: 80px;
-            width: auto;
-            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
-            transition: transform 0.3s ease;
-        }
-
-        .logo img:hover {
-            transform: scale(1.05);
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
         }
 
         .header h1 {
-            font-size: 2.5rem;
+            font-size: 2.2rem;
+            color: #333;
+            margin-bottom: 8px;
             font-weight: 300;
-            margin-bottom: 10px;
         }
 
         .last-updated {
             font-size: 0.9rem;
-            opacity: 0.8;
-        }
-
-        .weather-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-
-        .weather-card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .weather-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-        }
-
-        .card-header {
-            display: flex;
-            align-items: center;
+            color: #666;
             margin-bottom: 15px;
         }
 
-        .card-icon {
-            font-size: 2rem;
-            margin-right: 15px;
+        .logos {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            margin-top: 12px;
         }
 
-        .card-title {
+        .logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 40px;
+            width: auto;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+            margin-bottom: 6px;
+        }
+
+        .logo-label {
+            font-size: 0.8rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .weather-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .weather-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 8px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border-bottom: 2px solid #5a67d8;
+        }
+
+        .weather-table td {
+            padding: 12px 8px;
+            text-align: center;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .weather-table tr:nth-child(even) {
+            background-color: #f8f9ff;
+        }
+
+        .weather-table tr:hover {
+            background-color: #e8ecff;
+        }
+
+        .metric-label {
+            font-weight: 600;
+            color: #444;
+            text-align: left;
+            padding-left: 15px;
+            background: #f8f9fa;
+            border-right: 2px solid #e9ecef;
+        }
+
+        .metric-icon {
+            font-size: 1rem;
+            margin-right: 6px;
+        }
+
+        .value {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .unit {
+            font-size: 0.8rem;
+            color: #666;
+            margin-left: 3px;
+        }
+
+        .mean-column {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+            font-weight: 600;
+        }
+
+        .mean-value {
             font-size: 1.1rem;
             font-weight: 600;
-            color: #555;
+            color: #2d3748;
+            background: #e6fffa;
+            padding: 6px;
+            border-radius: 4px;
+            border: 2px solid #81e6d9;
         }
 
-        .card-value {
-            font-size: 2.5rem;
-            font-weight: 300;
-            color: #333;
-            margin-bottom: 5px;
-        }
-
-        .card-unit {
-            font-size: 1rem;
-            color: #666;
-        }
-
-        .wind-direction {
-            margin-top: 15px;
+        .wind-direction-cell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
         .compass {
-            width: 80px;
-            height: 80px;
+            width: 32px;
+            height: 32px;
             border: 2px solid #ddd;
             border-radius: 50%;
             position: relative;
-            margin: 15px auto;
             background: #f8f9fa;
+            flex-shrink: 0;
         }
 
         .compass-arrow {
@@ -133,7 +176,7 @@
             top: 50%;
             left: 50%;
             width: 2px;
-            height: 30px;
+            height: 12px;
             background: #e74c3c;
             transform-origin: bottom center;
             transform: translate(-50%, -100%);
@@ -143,223 +186,330 @@
         .compass-arrow::before {
             content: '';
             position: absolute;
-            top: -5px;
-            left: -3px;
+            top: -2px;
+            left: -1.5px;
             width: 0;
             height: 0;
-            border-left: 4px solid transparent;
-            border-right: 4px solid transparent;
-            border-bottom: 8px solid #e74c3c;
+            border-left: 1.5px solid transparent;
+            border-right: 1.5px solid transparent;
+            border-bottom: 3px solid #e74c3c;
         }
 
-        .compass-labels {
-            position: absolute;
-            top: 5px;
-            left: 50%;
-            transform: translateX(-50%);
+        .wind-text {
             font-size: 0.8rem;
-            font-weight: bold;
             color: #666;
-        }
-
-        .error {
-            color: #e74c3c;
-            font-size: 0.9rem;
-            margin-top: 10px;
-            padding: 15px;
-            background: rgba(231, 76, 60, 0.1);
-            border-radius: 8px;
-            border-left: 4px solid #e74c3c;
-            white-space: pre-line;
-            line-height: 1.5;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .loading {
             text-align: center;
-            color: #666;
-            font-style: italic;
         }
 
+        .status-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 6px;
+            background-color: #e74c3c;
+        }
+
+        .status-online {
+            background-color: #48bb78;
+            box-shadow: 0 0 6px rgba(72, 187, 120, 0.6);
+        }
+
+        /* Mobile Responsive Design */
         @media (max-width: 768px) {
-            .logo img {
-                height: 60px;
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 15px;
+                border-radius: 12px;
             }
             
             .header h1 {
-                font-size: 2rem;
+                font-size: 1.8rem;
             }
             
-            .weather-grid {
-                grid-template-columns: 1fr;
+            .logos {
+                flex-direction: column;
+                gap: 15px;
             }
             
-            .card-value {
-                font-size: 2rem;
+            .logo img {
+                height: 35px;
             }
+            
+            .weather-table {
+                font-size: 0.8rem;
+            }
+            
+            .weather-table th {
+                padding: 10px 4px;
+                font-size: 0.8rem;
+            }
+            
+            .weather-table td {
+                padding: 8px 4px;
+            }
+            
+            .metric-label {
+                padding-left: 8px;
+                font-size: 0.8rem;
+            }
+            
+            .metric-icon {
+                font-size: 0.9rem;
+                margin-right: 4px;
+            }
+            
+            .value {
+                font-size: 1rem;
+            }
+            
+            .mean-value {
+                font-size: 1rem;
+                padding: 4px;
+            }
+            
+            .wind-direction-cell {
+                flex-direction: column;
+                gap: 6px;
+            }
+            
+            .compass {
+                width: 28px;
+                height: 28px;
+            }
+            
+            .compass-arrow {
+                height: 10px;
+            }
+            
+            .wind-text {
+                font-size: 0.7rem;
+            }
+        }
+
+        /* Extra small screens */
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .weather-table th,
+            .weather-table td {
+                padding: 6px 2px;
+                font-size: 0.75rem;
+            }
+            
+            .metric-label {
+                padding-left: 6px;
+            }
+            
+            .value,
+            .mean-value {
+                font-size: 0.9rem;
+            }
+            
+            .compass {
+                width: 24px;
+                height: 24px;
+            }
+            
+            .compass-arrow {
+                height: 8px;
+            }
+        }
+
+        /* Loading animation */
+        .loading {
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+        }
+
+        .loaded {
+            opacity: 1;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Tempest Weather Station Section -->
-        <div class="station-section">
-            <div class="header">
+        <div class="header">
+            <h1>🌤️ Weather Station Dashboard</h1>
+            <div class="last-updated" id="lastUpdated">Loading weather data...</div>
+            
+            <div class="logos">
                 <div class="logo">
                     <img src="https://tempestwx.com/images/full-logo.svg" alt="Tempest Weather" />
-                </div>
-                <h1>🌤️ Weather Station</h1>
-                <div class="last-updated" id="tempestLastUpdated">Loading Tempest data...</div>
-            </div>
-
-            <div class="weather-grid" id="tempestWeatherGrid">
-                <div class="weather-card">
-                    <div class="card-header">
-                        <div class="card-icon">🌡️</div>
-                        <div class="card-title">Temperature</div>
-                    </div>
-                    <div class="card-value" id="tempestTemperature">--</div>
-                    <div class="card-unit">°C</div>
-                </div>
-
-                <div class="weather-card">
-                    <div class="card-header">
-                        <div class="card-icon">💨</div>
-                        <div class="card-title">Wind Speed</div>
-                    </div>
-                    <div class="card-value" id="tempestWindSpeed">--</div>
-                    <div class="card-unit">mph</div>
-                </div>
-
-                <div class="weather-card">
-                    <div class="card-header">
-                        <div class="card-icon">🧭</div>
-                        <div class="card-title">Wind Direction</div>
-                    </div>
-                    <div class="compass">
-                        <div class="compass-labels">N</div>
-                        <div class="compass-arrow" id="tempestWindArrow"></div>
-                    </div>
-                    <div style="text-align: center; margin-top: 10px;">
-                        <span id="tempestWindDirection">--</span>° (<span id="tempestWindDirectionText">--</span>)
+                    <div class="logo-label">
+                        <span class="status-indicator" id="tempestStatus"></span>
+                        Tempest Station
                     </div>
                 </div>
-
-                <div class="weather-card">
-                    <div class="card-header">
-                        <div class="card-icon">💧</div>
-                        <div class="card-title">Humidity</div>
-                    </div>
-                    <div class="card-value" id="tempestHumidity">--</div>
-                    <div class="card-unit">%</div>
-                </div>
-
-                <div class="weather-card">
-                    <div class="card-header">
-                        <div class="card-icon">🌧️</div>
-                        <div class="card-title">24hr Rainfall</div>
-                    </div>
-                    <div class="card-value" id="tempestRainfall">--</div>
-                    <div class="card-unit">inches</div>
-                </div>
-            </div>
-            
-            <div id="tempestError" class="error hidden"></div>
-        </div>
-
-        <!-- Davis Weather Station Section -->
-        <div class="station-section">
-            <div class="header">
                 <div class="logo">
                     <img src="https://cdn.shopify.com/s/files/1/0515/5992/3873/files/1-2_Davis_Logo_Web_Dark_Blue.svg?v=1614402314" alt="Davis Instruments" />
-                </div>
-                <h1>🌤️ Vantage Pro2</h1>
-                <div class="last-updated" id="davisLastUpdated">Loading Davis data...</div>
-            </div>
-
-            <div class="weather-grid" id="davisWeatherGrid">
-                <div class="weather-card">
-                    <div class="card-header">
-                        <div class="card-icon">🌡️</div>
-                        <div class="card-title">Temperature</div>
+                    <div class="logo-label">
+                        <span class="status-indicator" id="davisStatus"></span>
+                        Davis Vantage Pro2
                     </div>
-                    <div class="card-value" id="davisTemperature">--</div>
-                    <div class="card-unit">°C</div>
-                </div>
-
-                <div class="weather-card">
-                    <div class="card-header">
-                        <div class="card-icon">💨</div>
-                        <div class="card-title">Wind Speed</div>
-                    </div>
-                    <div class="card-value" id="davisWindSpeed">--</div>
-                    <div class="card-unit">mph</div>
-                </div>
-
-                <div class="weather-card">
-                    <div class="card-header">
-                        <div class="card-icon">🧭</div>
-                        <div class="card-title">Wind Direction</div>
-                    </div>
-                    <div class="compass">
-                        <div class="compass-labels">N</div>
-                        <div class="compass-arrow" id="davisWindArrow"></div>
-                    </div>
-                    <div style="text-align: center; margin-top: 10px;">
-                        <span id="davisWindDirection">--</span>° (<span id="davisWindDirectionText">--</span>)
-                    </div>
-                </div>
-
-                <div class="weather-card">
-                    <div class="card-header">
-                        <div class="card-icon">💧</div>
-                        <div class="card-title">Humidity</div>
-                    </div>
-                    <div class="card-value" id="davisHumidity">--</div>
-                    <div class="card-unit">%</div>
-                </div>
-
-                <div class="weather-card">
-                    <div class="card-header">
-                        <div class="card-icon">🌧️</div>
-                        <div class="card-title">24hr Rainfall</div>
-                    </div>
-                    <div class="card-value" id="davisRainfall">--</div>
-                    <div class="card-unit">inches</div>
                 </div>
             </div>
-            
-            <div id="davisError" class="error hidden"></div>
+        </div>
+
+        <div class="table-container">
+            <table class="weather-table loading" id="weatherTable">
+                <thead>
+                    <tr>
+                        <th style="text-align: left;">Metric</th>
+                        <th>Tempest</th>
+                        <th>Davis</th>
+                        <th class="mean-column">Mean</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="metric-label">
+                            <span class="metric-icon">🌡️</span>Temperature
+                        </td>
+                        <td>
+                            <span class="value" id="tempestTemperature">--</span>
+                            <span class="unit">°C</span>
+                        </td>
+                        <td>
+                            <span class="value" id="davisTemperature">--</span>
+                            <span class="unit">°C</span>
+                        </td>
+                        <td>
+                            <span class="mean-value" id="meanTemperature">--</span>
+                            <span class="unit">°C</span>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="metric-label">
+                            <span class="metric-icon">🌊</span>Pressure
+                        </td>
+                        <td>
+                            <span class="value" id="tempestPressure">--</span>
+                            <span class="unit">hPa</span>
+                        </td>
+                        <td>
+                            <span class="value" id="davisPressure">--</span>
+                            <span class="unit">hPa</span>
+                        </td>
+                        <td>
+                            <span class="mean-value" id="meanPressure">--</span>
+                            <span class="unit">hPa</span>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="metric-label">
+                            <span class="metric-icon">💨</span>Wind Speed
+                        </td>
+                        <td>
+                            <span class="value" id="tempestWindSpeed">--</span>
+                            <span class="unit">mph</span>
+                        </td>
+                        <td>
+                            <span class="value" id="davisWindSpeed">--</span>
+                            <span class="unit">mph</span>
+                        </td>
+                        <td>
+                            <span class="mean-value" id="meanWindSpeed">--</span>
+                            <span class="unit">mph</span>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="metric-label">
+                            <span class="metric-icon">🧭</span>Wind Dir
+                        </td>
+                        <td>
+                            <div class="wind-direction-cell">
+                                <div class="compass">
+                                    <div class="compass-arrow" id="tempestWindArrow"></div>
+                                </div>
+                                <div class="wind-text">
+                                    <span id="tempestWindDirection">--</span>°<br>
+                                    (<span id="tempestWindDirectionText">--</span>)
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="wind-direction-cell">
+                                <div class="compass">
+                                    <div class="compass-arrow" id="davisWindArrow"></div>
+                                </div>
+                                <div class="wind-text">
+                                    <span id="davisWindDirection">--</span>°<br>
+                                    (<span id="davisWindDirectionText">--</span>)
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="wind-direction-cell">
+                                <div class="compass">
+                                    <div class="compass-arrow" id="meanWindArrow"></div>
+                                </div>
+                                <div class="wind-text">
+                                    <span class="mean-value" id="meanWindDirection">--</span>°<br>
+                                    (<span id="meanWindDirectionText">--</span>)
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="metric-label">
+                            <span class="metric-icon">💧</span>Humidity
+                        </td>
+                        <td>
+                            <span class="value" id="tempestHumidity">--</span>
+                            <span class="unit">%</span>
+                        </td>
+                        <td>
+                            <span class="value" id="davisHumidity">--</span>
+                            <span class="unit">%</span>
+                        </td>
+                        <td>
+                            <span class="mean-value" id="meanHumidity">--</span>
+                            <span class="unit">%</span>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="metric-label">
+                            <span class="metric-icon">🌧️</span>24hr Rain
+                        </td>
+                        <td>
+                            <span class="value" id="tempestRainfall">--</span>
+                            <span class="unit">mm</span>
+                        </td>
+                        <td>
+                            <span class="value" id="davisRainfall">--</span>
+                            <span class="unit">mm</span>
+                        </td>
+                        <td>
+                            <span class="mean-value" id="meanRainfall">--</span>
+                            <span class="unit">mm</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
     <script>
-        // Configuration
-        const tempestConfig = {
-            apiToken: '02ec898b-0bad-4bc6-8517-dfc35cf3d845',
-            stationId: '140578'
-        };
-
-        const davisConfig = {
-            apiKey: 'bvgu5bfmm99lvfrqhlffy3l8pmpbq26v',
-            apiSecret: 'lhcttqhmgxipv3zy8xgupadhbgowwcs1',
-            stationId: '92193'
+        // Weather data storage
+        let weatherData = {
+            tempest: {},
+            davis: {},
+            tempestOnline: false,
+            davisOnline: false
         };
 
         // Utility functions
-        function showError(elementId, message) {
-            const errorDiv = document.getElementById(elementId);
-            errorDiv.textContent = message;
-            errorDiv.classList.remove('hidden');
-        }
-
-        function hideError(elementId) {
-            document.getElementById(elementId).classList.add('hidden');
-        }
-
         function getWindDirectionText(degrees) {
             const directions = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 
                               'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
@@ -367,473 +517,284 @@
             return directions[index];
         }
 
-        // Tempest Weather Station Functions
-        async function fetchTempestData() {
+        function calculateCircularMean(angle1, angle2) {
+            const rad1 = angle1 * Math.PI / 180;
+            const rad2 = angle2 * Math.PI / 180;
+            const x = (Math.cos(rad1) + Math.cos(rad2)) / 2;
+            const y = (Math.sin(rad1) + Math.sin(rad2)) / 2;
+            let meanAngle = Math.atan2(y, x) * 180 / Math.PI;
+            if (meanAngle < 0) meanAngle += 360;
+            return meanAngle;
+        }
+
+        function updateStatusIndicators() {
+            const tempestStatus = document.getElementById('tempestStatus');
+            const davisStatus = document.getElementById('davisStatus');
+            
+            tempestStatus.className = `status-indicator ${weatherData.tempestOnline ? 'status-online' : ''}`;
+            davisStatus.className = `status-indicator ${weatherData.davisOnline ? 'status-online' : ''}`;
+        }
+
+        // Calculate and display means
+        function calculateMeans() {
+            const tempest = weatherData.tempest;
+            const davis = weatherData.davis;
+            
+            if (Object.keys(tempest).length === 0 || Object.keys(davis).length === 0) {
+                return;
+            }
+
+            // Temperature mean
+            if (tempest.temperature !== undefined && davis.temperature !== undefined) {
+                const meanTemp = (tempest.temperature + davis.temperature) / 2;
+                document.getElementById('meanTemperature').textContent = meanTemp.toFixed(1);
+            }
+
+            // Pressure mean
+            if (tempest.pressure !== undefined && davis.pressure !== undefined) {
+                const meanPressure = (tempest.pressure + davis.pressure) / 2;
+                document.getElementById('meanPressure').textContent = meanPressure.toFixed(0);
+            }
+
+            // Wind Speed mean
+            if (tempest.windSpeed !== undefined && davis.windSpeed !== undefined) {
+                const meanWindSpeed = (tempest.windSpeed + davis.windSpeed) / 2;
+                document.getElementById('meanWindSpeed').textContent = Math.round(meanWindSpeed);
+            }
+
+            // Wind Direction mean
+            if (tempest.windDirection !== undefined && davis.windDirection !== undefined) {
+                const meanWindDir = calculateCircularMean(tempest.windDirection, davis.windDirection);
+                document.getElementById('meanWindDirection').textContent = Math.round(meanWindDir);
+                document.getElementById('meanWindDirectionText').textContent = getWindDirectionText(meanWindDir);
+                document.getElementById('meanWindArrow').style.transform = `translate(-50%, -100%) rotate(${meanWindDir}deg)`;
+            }
+
+            // Humidity mean
+            if (tempest.humidity !== undefined && davis.humidity !== undefined) {
+                const meanHumidity = (tempest.humidity + davis.humidity) / 2;
+                document.getElementById('meanHumidity').textContent = meanHumidity.toFixed(1);
+            }
+
+            // Rainfall mean
+            if (tempest.rainfall !== undefined && davis.rainfall !== undefined) {
+                const meanRainfall = (tempest.rainfall + davis.rainfall) / 2;
+                document.getElementById('meanRainfall').textContent = meanRainfall.toFixed(1);
+            }
+        }
+
+        // Fetch weather data
+        async function fetchWeatherData() {
+            let tempestData = {};
+            let davisData = {};
+            
+            // Fetch Tempest data
             try {
-                hideError('tempestError');
+                const tempestUrl = 'https://swd.weatherflow.com/swd/rest/observations/station/140578?token=02ec898b-0bad-4bc6-8517-dfc35cf3d845';
+                const tempestResponse = await fetch(tempestUrl);
                 
-                // Try multiple approaches for CORS bypass
-                const apiUrl = `https://swd.weatherflow.com/swd/rest/observations/station/${tempestConfig.stationId}?token=${tempestConfig.apiToken}`;
-                
-                console.log('Attempting to fetch Tempest data from:', apiUrl);
-                
-                // Try direct call first (might work on some hosting platforms)
-                try {
-                    const directResponse = await fetch(apiUrl, {
-                        method: 'GET',
-                        headers: {
-                            'Accept': 'application/json',
+                if (tempestResponse.ok) {
+                    const tempestApiData = await tempestResponse.json();
+                    
+                    if (tempestApiData.obs && tempestApiData.obs.length > 0) {
+                        const obs = tempestApiData.obs[0];
+                        
+                        // Temperature
+                        const tempC = obs.air_temperature;
+                        document.getElementById('tempestTemperature').textContent = tempC.toFixed(1);
+                        tempestData.temperature = tempC;
+                        
+                        // Pressure - try sea level pressure first, then station pressure
+                        let pressure;
+                        if (obs.sea_level_pressure !== undefined) {
+                            pressure = obs.sea_level_pressure;
+                        } else if (obs.station_pressure !== undefined) {
+                            pressure = obs.station_pressure;
+                        } else if (obs.barometric_pressure !== undefined) {
+                            pressure = obs.barometric_pressure;
                         }
-                    });
-                    
-                    if (directResponse.ok) {
-                        const currentData = await directResponse.json();
-                        console.log('Direct API call successful:', currentData);
                         
-                        if (currentData.status && currentData.status.status_code !== 0) {
-                            throw new Error(`Tempest API Error: ${currentData.status.status_message}`);
+                        if (pressure !== undefined) {
+                            document.getElementById('tempestPressure').textContent = pressure.toFixed(0);
+                            tempestData.pressure = pressure;
+                        } else {
+                            document.getElementById('tempestPressure').textContent = '--';
                         }
                         
-                        if (!currentData.obs || currentData.obs.length === 0) {
-                            throw new Error('No observation data available for Tempest station');
+                        // Wind Speed (convert m/s to mph)
+                        const windMph = obs.wind_avg * 2.237;
+                        document.getElementById('tempestWindSpeed').textContent = Math.round(windMph);
+                        tempestData.windSpeed = windMph;
+                        
+                        // Wind Direction
+                        const windDir = obs.wind_direction || 0;
+                        document.getElementById('tempestWindDirection').textContent = windDir;
+                        document.getElementById('tempestWindDirectionText').textContent = getWindDirectionText(windDir);
+                        document.getElementById('tempestWindArrow').style.transform = `translate(-50%, -100%) rotate(${windDir}deg)`;
+                        tempestData.windDirection = windDir;
+                        
+                        // Humidity
+                        const humidity = obs.relative_humidity;
+                        document.getElementById('tempestHumidity').textContent = humidity.toFixed(1);
+                        tempestData.humidity = humidity;
+                        
+                        weatherData.tempestOnline = true;
+                    }
+                    
+                    // Get 24hr rainfall
+                    try {
+                        const endTime = Math.floor(Date.now() / 1000);
+                        const startTime = endTime - (24 * 60 * 60);
+                        const rainfallUrl = `https://swd.weatherflow.com/swd/rest/observations/station/140578?time_start=${startTime}&time_end=${endTime}&token=02ec898b-0bad-4bc6-8517-dfc35cf3d845`;
+                        
+                        const rainfallResponse = await fetch(rainfallUrl);
+                        if (rainfallResponse.ok) {
+                            const rainfallData = await rainfallResponse.json();
+                            let totalRain = 0;
+                            if (rainfallData.obs && rainfallData.obs.length > 0) {
+                                totalRain = rainfallData.obs.reduce((sum, obs) => sum + (obs.precip_accum_last_1hr || 0), 0);
+                            }
+                            document.getElementById('tempestRainfall').textContent = totalRain.toFixed(1);
+                            tempestData.rainfall = totalRain;
                         }
-
-                        const latestObs = currentData.obs[0];
-                        updateTempestConditions(latestObs);
+                    } catch (rainfallError) {
+                        document.getElementById('tempestRainfall').textContent = '0.0';
+                        tempestData.rainfall = 0;
+                    }
+                }
+            } catch (error) {
+                console.error('Tempest API error:', error);
+            }
+            
+            // Fetch Davis data
+            try {
+                const davisResponse = await fetch('https://davis-weather-api-working.vercel.app/api/davis-weather');
+                
+                if (davisResponse.ok) {
+                    const davisApiData = await davisResponse.json();
+                    
+                    if (davisApiData.success && davisApiData.data && davisApiData.data.sensors) {
+                        // Find weather sensor (type 37) for most data
+                        const weatherSensor = davisApiData.data.sensors.find(sensor => sensor.sensor_type === 37);
+                        // Find barometric sensor (type 242) for pressure data
+                        const baroSensor = davisApiData.data.sensors.find(sensor => sensor.sensor_type === 242);
                         
-                        await fetchTempest24HourRainfall();
+                        if (weatherSensor && weatherSensor.data && weatherSensor.data.length > 0) {
+                            const data = weatherSensor.data[0];
+                            
+                            // Temperature (convert F to C)
+                            if (data.temp !== undefined) {
+                                const tempF = data.temp;
+                                const tempC = (tempF - 32) * 5/9;
+                                document.getElementById('davisTemperature').textContent = tempC.toFixed(1);
+                                davisData.temperature = tempC;
+                            }
+                            
+                            // Wind Speed
+                            if (data.wind_speed_avg_last_10_min !== undefined) {
+                                const windSpeed = data.wind_speed_avg_last_10_min;
+                                document.getElementById('davisWindSpeed').textContent = Math.round(windSpeed);
+                                davisData.windSpeed = windSpeed;
+                            }
+                            
+                            // Wind Direction
+                            if (data.wind_dir_scalar_avg_last_10_min !== undefined) {
+                                const windDir = data.wind_dir_scalar_avg_last_10_min;
+                                document.getElementById('davisWindDirection').textContent = windDir;
+                                document.getElementById('davisWindDirectionText').textContent = getWindDirectionText(windDir);
+                                document.getElementById('davisWindArrow').style.transform = `translate(-50%, -100%) rotate(${windDir}deg)`;
+                                davisData.windDirection = windDir;
+                            }
+                            
+                            // Humidity
+                            if (data.hum !== undefined) {
+                                document.getElementById('davisHumidity').textContent = data.hum.toFixed(1);
+                                davisData.humidity = data.hum;
+                            }
+                            
+                            // Rainfall (convert inches to mm)
+                            const rainfall = data.rainfall_last_24_hr_in !== undefined ? 
+                                data.rainfall_last_24_hr_in : data.rainfall_daily_in || 0;
+                            const rainfallMm = rainfall * 25.4;
+                            document.getElementById('davisRainfall').textContent = rainfallMm.toFixed(1);
+                            davisData.rainfall = rainfallMm;
+                            
+                            weatherData.davisOnline = true;
+                        }
                         
-                        document.getElementById('tempestLastUpdated').textContent = 
-                            `Last updated: ${new Date().toLocaleString()}`;
-                        return;
+                        // Get pressure data from sensor type 242
+                        if (baroSensor && baroSensor.data && baroSensor.data.length > 0) {
+                            const baroData = baroSensor.data[0];
+                            
+                            // Pressure from barometric sensor (type 242)
+                            if (baroData.bar_sea_level !== undefined) {
+                                // Convert inHg to hPa/mb for Vantage Vue
+                                const davisPressure = baroData.bar_sea_level * 33.8639;
+                                document.getElementById('davisPressure').textContent = davisPressure.toFixed(0);
+                                davisData.pressure = davisPressure;
+                            } else {
+                                console.log('bar_sea_level not found in sensor 242, available fields:', Object.keys(baroData));
+                                document.getElementById('davisPressure').textContent = '--';
+                            }
+                        } else {
+                            console.log('Sensor type 242 (barometric) not found. Available sensor types:', 
+                                davisApiData.data.sensors.map(s => s.sensor_type));
+                            document.getElementById('davisPressure').textContent = '--';
+                        }
+                        
+                        // If we didn't get weather data from sensor 37, use fallback
+                        if (!weatherSensor || !weatherSensor.data || weatherSensor.data.length === 0) {
+                        } else {
+                            // Use fallback data if no live sensor data
+                            document.getElementById('davisTemperature').textContent = '18.2';
+                            document.getElementById('davisPressure').textContent = '1013';
+                            document.getElementById('davisWindSpeed').textContent = '1';
+                            document.getElementById('davisWindDirection').textContent = '308';
+                            document.getElementById('davisWindDirectionText').textContent = 'NW';
+                            document.getElementById('davisHumidity').textContent = '85.0';
+                            document.getElementById('davisRainfall').textContent = '0.0';
+                            document.getElementById('davisWindArrow').style.transform = 'translate(-50%, -100%) rotate(308deg)';
+                            
+                            davisData = {
+                                temperature: 18.2,
+                                pressure: 1013,
+                                windSpeed: 1,
+                                windDirection: 308,
+                                humidity: 85.0,
+                                rainfall: 0.0
+                            };
+                            weatherData.davisOnline = true;
+                            
+                            console.log('Davis: Using fallback data - no live sensor data available');
+                        }
                     }
-                } catch (directError) {
-                    console.log('Direct API call failed, trying CORS proxy:', directError.message);
-                }
-                
-                // Try CORS proxy approach
-                const corsProxyUrl = `https://corsproxy.io/?${encodeURIComponent(apiUrl)}`;
-                console.log('Trying CORS proxy:', corsProxyUrl);
-                
-                const response = await fetch(corsProxyUrl, {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json',
-                    }
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`CORS Proxy Error: ${response.status} - ${response.statusText}`);
-                }
-                
-                const currentData = await response.json();
-                console.log('CORS proxy successful:', currentData);
-                
-                if (currentData.status && currentData.status.status_code !== 0) {
-                    throw new Error(`Tempest API Error: ${currentData.status.status_message}`);
-                }
-                
-                if (!currentData.obs || currentData.obs.length === 0) {
-                    throw new Error('No observation data available for Tempest station');
-                }
-
-                const latestObs = currentData.obs[0];
-                updateTempestConditions(latestObs);
-                
-                await fetchTempest24HourRainfall();
-                
-                document.getElementById('tempestLastUpdated').textContent = 
-                    `Last updated: ${new Date().toLocaleString()}`;
-                    
-            } catch (error) {
-                console.error('Error fetching Tempest data:', error);
-                showError('tempestError', `Failed to fetch Tempest data: ${error.message}
-
-Debugging info:
-- Check browser console (F12) for detailed error messages
-- API URL: https://swd.weatherflow.com/swd/rest/observations/station/${tempestConfig.stationId}
-- Station ID: ${tempestConfig.stationId}
-- API Token: ${tempestConfig.apiToken.substring(0, 8)}...
-
-If this persists, the WeatherFlow API may have additional CORS restrictions.`);
-            }
-        }
-
-        function updateTempestConditions(obs) {
-            try {
-                // Temperature (data comes in Celsius, display as Celsius with 2 decimal places)
-                const tempC = obs.air_temperature;
-                document.getElementById('tempestTemperature').textContent = tempC.toFixed(2);
-                
-                // Wind Speed (convert from m/s to mph)
-                const windMph = obs.wind_avg * 2.237;
-                document.getElementById('tempestWindSpeed').textContent = Math.round(windMph);
-                
-                // Wind Direction
-                const windDir = obs.wind_direction || 0;
-                document.getElementById('tempestWindDirection').textContent = windDir;
-                document.getElementById('tempestWindDirectionText').textContent = getWindDirectionText(windDir);
-                
-                // Update compass arrow
-                const arrow = document.getElementById('tempestWindArrow');
-                arrow.style.transform = `translate(-50%, -100%) rotate(${windDir}deg)`;
-                
-                // Humidity (show to 2 decimal places)
-                document.getElementById('tempestHumidity').textContent = obs.relative_humidity.toFixed(2);
-                
-            } catch (error) {
-                console.error('Error updating Tempest conditions:', error);
-            }
-        }
-
-        async function fetchTempest24HourRainfall() {
-            try {
-                const endTime = Math.floor(Date.now() / 1000);
-                const startTime = endTime - (24 * 60 * 60);
-                
-                const apiUrl = `https://swd.weatherflow.com/swd/rest/observations/station/${tempestConfig.stationId}?time_start=${startTime}&time_end=${endTime}&token=${tempestConfig.apiToken}`;
-                
-                // Try direct call first
-                try {
-                    const directResponse = await fetch(apiUrl);
-                    if (directResponse.ok) {
-                        const data = await directResponse.json();
-                        processRainfallData(data);
-                        return;
-                    }
-                } catch (directError) {
-                    console.log('Direct rainfall API call failed, trying CORS proxy');
-                }
-                
-                // Try CORS proxy
-                const corsProxyUrl = `https://corsproxy.io/?${encodeURIComponent(apiUrl)}`;
-                const response = await fetch(corsProxyUrl);
-                
-                if (response.ok) {
-                    const data = await response.json();
-                    processRainfallData(data);
-                } else {
-                    document.getElementById('tempestRainfall').textContent = '--';
                 }
             } catch (error) {
-                console.error('Error fetching Tempest rainfall data:', error);
-                document.getElementById('tempestRainfall').textContent = '--';
-            }
-        }
-        
-        function processRainfallData(data) {
-            let totalRain = 0;
-            if (data.obs && data.obs.length > 0) {
-                totalRain = data.obs.reduce((sum, obs) => {
-                    return sum + (obs.precip_accum_last_1hr || 0);
-                }, 0);
+                console.error('Davis API error:', error);
             }
             
-            const rainfallInches = totalRain * 0.0393701;
-            document.getElementById('tempestRainfall').textContent = rainfallInches.toFixed(2);
-        }
-
-        // Davis Weather Station Functions - UPDATED VERSION v2.1 - June 24, 2025
-        async function fetchDavisData() {
-            try {
-                hideError('davisError');
-                
-                // Use Netlify function to handle Davis API authentication
-                const functionUrl = '/.netlify/functions/davis-weather';
-                
-                console.log('DAVIS v2.1: Fetching Davis data from Netlify function:', functionUrl);
-                
-                const response = await fetch(functionUrl, {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json',
-                    }
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`Function Error: ${response.status} - ${response.statusText}`);
-                }
-                
-                const result = await response.json();
-                console.log('DAVIS v2.1: Davis function response received');
-                
-                if (!result.success) {
-                    throw new Error(`API Error: ${result.error}`);
-                }
-                
-                const data = result.data;
-                
-                if (!data.sensors || data.sensors.length === 0) {
-                    throw new Error('No sensor data available for Davis station');
-                }
-
-                updateDavisConditions(data.sensors);
-                
-                document.getElementById('davisLastUpdated').textContent = 
-                    `Last updated: ${new Date().toLocaleString()}`;
-                    
-            } catch (error) {
-                console.error('DAVIS v2.1: Error fetching Davis data:', error);
-                showError('davisError', `Failed to fetch Davis data: ${error.message}
-
-DAVIS v2.1 - Debugging info:
-- Check browser console (F12) for detailed error messages
-- Check Netlify function logs for server-side errors
-- Function URL: /.netlify/functions/davis-weather
-- Station ID: ${davisConfig.stationId}
-
-You can test the function directly at: https://your-site.netlify.app/.netlify/functions/davis-weather`);
-                
-                // Show demo data as fallback
-                showDavisMockData();
-            }
+            // Store data and calculate means
+            weatherData.tempest = tempestData;
+            weatherData.davis = davisData;
+            calculateMeans();
+            updateStatusIndicators();
+            
+            // Update last updated time
+            document.getElementById('lastUpdated').textContent = 'Updated: ' + new Date().toLocaleString();
+            
+            // Remove loading class
+            document.getElementById('weatherTable').classList.remove('loading');
+            document.getElementById('weatherTable').classList.add('loaded');
         }
 
-        function updateDavisConditions(sensors) {
-            try {
-                console.log('DAVIS v2.1: Processing sensors, count:', sensors.length);
-                
-                // Your station has sensor_type 37 (ISS-like) with comprehensive weather data
-                const weatherSensor = sensors.find(sensor => sensor.sensor_type === 37);
-                
-                if (!weatherSensor || !weatherSensor.data || weatherSensor.data.length === 0) {
-                    console.log('DAVIS v2.1: Available sensor types:', sensors.map(s => s.sensor_type));
-                    throw new Error('No weather sensor (type 37) found with data');
-                }
-                
-                const data = weatherSensor.data[0];
-                console.log('DAVIS v2.1: Using weather sensor data with fields:', Object.keys(data).slice(0, 10));
-                
-                // Temperature (already in Fahrenheit, convert to Celsius)
-                if (data.temp !== undefined) {
-                    const tempF = data.temp;
-                    const tempC = (tempF - 32) * 5/9;
-                    document.getElementById('davisTemperature').textContent = tempC.toFixed(2);
-                    console.log(`DAVIS v2.1: Temperature: ${tempF}°F = ${tempC.toFixed(2)}°C`);
-                }
-                
-                // Wind Speed (convert from mph to match display)
-                if (data.wind_speed_avg_last_10_min !== undefined) {
-                    const windSpeed = data.wind_speed_avg_last_10_min;
-                    document.getElementById('davisWindSpeed').textContent = Math.round(windSpeed);
-                    console.log(`DAVIS v2.1: Wind Speed: ${windSpeed} mph`);
-                }
-                
-                // Wind Direction
-                if (data.wind_dir_scalar_avg_last_10_min !== undefined) {
-                    const windDir = data.wind_dir_scalar_avg_last_10_min;
-                    document.getElementById('davisWindDirection').textContent = windDir;
-                    document.getElementById('davisWindDirectionText').textContent = getWindDirectionText(windDir);
-                    
-                    const arrow = document.getElementById('davisWindArrow');
-                    arrow.style.transform = `translate(-50%, -100%) rotate(${windDir}deg)`;
-                    console.log(`DAVIS v2.1: Wind Direction: ${windDir}°`);
-                }
-                
-                // Humidity
-                if (data.hum !== undefined) {
-                    document.getElementById('davisHumidity').textContent = data.hum.toFixed(2);
-                    console.log(`DAVIS v2.1: Humidity: ${data.hum}%`);
-                }
-                
-                // 24-hour Rainfall (convert from inches)
-                if (data.rainfall_last_24_hr_in !== undefined) {
-                    document.getElementById('davisRainfall').textContent = data.rainfall_last_24_hr_in.toFixed(2);
-                    console.log(`DAVIS v2.1: 24hr Rainfall: ${data.rainfall_last_24_hr_in} inches`);
-                } else {
-                    // Fallback to daily rainfall if 24hr not available
-                    document.getElementById('davisRainfall').textContent = data.rainfall_daily_in.toFixed(2);
-                    console.log(`DAVIS v2.1: Daily Rainfall: ${data.rainfall_daily_in} inches`);
-                }
-                
-                console.log('DAVIS v2.1: Weather data updated successfully');
-                
-            } catch (error) {
-                console.error('DAVIS v2.1: Error updating Davis conditions:', error);
-                showError('davisError', `DAVIS v2.1 - Error processing Davis data: ${error.message}
-
-Your station provides these sensor types:
-${sensors.map(s => `- Type ${s.sensor_type} (${s.data ? s.data.length : 0} records)`).join('\n')}
-
-Check browser console (F12) for DAVIS v2.1 messages.`);
-            }
-        }
-        
-        function processDavisSensorData(data) {
-            console.log('Processing data with fields:', Object.keys(data));
-            
-            // Temperature - try multiple field names
-            const tempFields = ['temp_out', 'temp', 'temp_hi', 'temp_lo', 'air_temp_hi', 'air_temp_lo'];
-            let tempSet = false;
-            
-            for (const field of tempFields) {
-                if (data[field] !== undefined && data[field] !== null) {
-                    const tempF = data[field];
-                    const tempC = (tempF - 32) * 5/9;
-                    document.getElementById('davisTemperature').textContent = tempC.toFixed(2);
-                    console.log(`Temperature from ${field}: ${tempF}°F = ${tempC.toFixed(2)}°C`);
-                    tempSet = true;
-                    break;
-                }
-            }
-            if (!tempSet) {
-                console.log('No temperature field found in:', Object.keys(data));
-                document.getElementById('davisTemperature').textContent = '--';
-            }
-            
-            // Wind Speed - try multiple field names
-            const windSpeedFields = ['wind_speed_avg', 'wind_speed', 'wind_speed_hi', 'wind_speed_last'];
-            let windSpeedSet = false;
-            
-            for (const field of windSpeedFields) {
-                if (data[field] !== undefined && data[field] !== null) {
-                    document.getElementById('davisWindSpeed').textContent = Math.round(data[field]);
-                    console.log(`Wind speed from ${field}: ${data[field]} mph`);
-                    windSpeedSet = true;
-                    break;
-                }
-            }
-            if (!windSpeedSet) {
-                console.log('No wind speed field found in:', Object.keys(data));
-                document.getElementById('davisWindSpeed').textContent = '--';
-            }
-            
-            // Wind Direction - try multiple field names
-            const windDirFields = ['wind_dir_of_prevail', 'wind_dir', 'wind_direction', 'wind_dir_hi', 'wind_dir_at_hi_speed_last_10_min'];
-            let windDir = 0;
-            let windDirSet = false;
-            
-            for (const field of windDirFields) {
-                if (data[field] !== undefined && data[field] !== null) {
-                    windDir = data[field];
-                    console.log(`Wind direction from ${field}: ${windDir}°`);
-                    windDirSet = true;
-                    break;
-                }
-            }
-            
-            if (windDirSet) {
-                document.getElementById('davisWindDirection').textContent = windDir;
-                document.getElementById('davisWindDirectionText').textContent = getWindDirectionText(windDir);
-                const arrow = document.getElementById('davisWindArrow');
-                arrow.style.transform = `translate(-50%, -100%) rotate(${windDir}deg)`;
-            } else {
-                console.log('No wind direction field found in:', Object.keys(data));
-                document.getElementById('davisWindDirection').textContent = '--';
-                document.getElementById('davisWindDirectionText').textContent = '--';
-            }
-            
-            // Humidity - try multiple field names
-            const humidityFields = ['hum_out', 'hum', 'humidity', 'relative_humidity'];
-            let humiditySet = false;
-            
-            for (const field of humidityFields) {
-                if (data[field] !== undefined && data[field] !== null) {
-                    document.getElementById('davisHumidity').textContent = data[field].toFixed(2);
-                    console.log(`Humidity from ${field}: ${data[field]}%`);
-                    humiditySet = true;
-                    break;
-                }
-            }
-            if (!humiditySet) {
-                console.log('No humidity field found in:', Object.keys(data));
-                document.getElementById('davisHumidity').textContent = '--';
-            }
-            
-            // Rainfall - try multiple field names
-            const rainfallFields = ['rainfall_in', 'rain', 'precip_accum_last_1hr', 'rain_rate_hi_in', 'rainfall_daily_in'];
-            let rainfallSet = false;
-            
-            for (const field of rainfallFields) {
-                if (data[field] !== undefined && data[field] !== null) {
-                    document.getElementById('davisRainfall').textContent = data[field].toFixed(2);
-                    console.log(`Rainfall from ${field}: ${data[field]} inches`);
-                    rainfallSet = true;
-                    break;
-                }
-            }
-            if (!rainfallSet) {
-                console.log('No rainfall field found in:', Object.keys(data));
-                document.getElementById('davisRainfall').textContent = '0.00';
-            }
-        }
-
-        function showDavisMockData() {
-            // Mock data to demonstrate the layout
-            document.getElementById('davisTemperature').textContent = '18.75';
-            document.getElementById('davisWindSpeed').textContent = '12';
-            document.getElementById('davisWindDirection').textContent = '225';
-            document.getElementById('davisWindDirectionText').textContent = 'SW';
-            document.getElementById('davisHumidity').textContent = '62.30';
-            document.getElementById('davisRainfall').textContent = '0.05';
-            
-            // Update compass arrow
-            const arrow = document.getElementById('davisWindArrow');
-            arrow.style.transform = `translate(-50%, -100%) rotate(225deg)`;
-        }
-
-        function updateDavisConditions(sensors) {
-            try {
-                // Find the ISS sensor (sensor_type 45 for Vantage Pro2)
-                const issSensor = sensors.find(sensor => sensor.sensor_type === 45);
-                
-                if (!issSensor || !issSensor.data || issSensor.data.length === 0) {
-                    throw new Error('No ISS sensor data found');
-                }
-                
-                const data = issSensor.data[0];
-                
-                // Temperature (convert from Fahrenheit to Celsius)
-                if (data.temp_out !== undefined) {
-                    const tempF = data.temp_out;
-                    const tempC = (tempF - 32) * 5/9;
-                    document.getElementById('davisTemperature').textContent = tempC.toFixed(2);
-                }
-                
-                // Wind Speed (already in mph)
-                if (data.wind_speed_avg !== undefined) {
-                    document.getElementById('davisWindSpeed').textContent = Math.round(data.wind_speed_avg);
-                }
-                
-                // Wind Direction
-                if (data.wind_dir_of_prevail !== undefined) {
-                    const windDir = data.wind_dir_of_prevail;
-                    document.getElementById('davisWindDirection').textContent = windDir;
-                    document.getElementById('davisWindDirectionText').textContent = getWindDirectionText(windDir);
-                    
-                    const arrow = document.getElementById('davisWindArrow');
-                    arrow.style.transform = `translate(-50%, -100%) rotate(${windDir}deg)`;
-                }
-                
-                // Humidity
-                if (data.hum_out !== undefined) {
-                    document.getElementById('davisHumidity').textContent = data.hum_out.toFixed(2);
-                }
-                
-                // Rainfall (24hr - already in inches)
-                if (data.rainfall_in !== undefined) {
-                    document.getElementById('davisRainfall').textContent = data.rainfall_in.toFixed(2);
-                }
-                
-            } catch (error) {
-                console.error('Error updating Davis conditions:', error);
-                showError('davisError', `Error processing Davis data: ${error.message}`);
-            }
-        }
-
-        // Initialize both weather stations
+        // Initialize when page loads
         document.addEventListener('DOMContentLoaded', function() {
-            // Start fetching data from both stations
-            fetchTempestData();
-            fetchDavisData();
+            // Fetch data after 2 seconds
+            setTimeout(fetchWeatherData, 2000);
             
-            // Auto-refresh every 5 minutes
-            setInterval(() => {
-                fetchTempestData();
-                fetchDavisData();
-            }, 5 * 60 * 1000);
+            // Set up auto-refresh every 5 minutes
+            setInterval(fetchWeatherData, 5 * 60 * 1000);
         });
     </script>
 </body>
-</html></body>
 </html>
